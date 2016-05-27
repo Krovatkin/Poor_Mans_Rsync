@@ -1,44 +1,42 @@
-#introduction
+#Chapter 1. Introduction to Perl One-Liners
 perl -ne 'print if $a{$_}++' file #all lines in a file that appear more than once
 perl -ne 'print "$. $_"' file # numbering lines
 
 perl -MList::Util=sum -alne 'print sum @F' #-MMODULE=foo,bar or -MMODULE qw(foo bar)'
 
-
-#chapter 2
+#2.1 Double-space a file
 while (<>) {
     # your program goes here (specified by -e)
 } continue {
     print or die "-p failed: $!\n";
 }
 
-#double space
-perl -pe '$\ = "\n"' file #double-space, $\ is  print's arg separator, $_ already includes a newline
+perl -pe '$\ = "\n"' file #double-space, $\ is a rec sep, $, is a field sep, $_ already includes a newline
 perl -pe 's/$/\n/' file
 perl -nE 'say' file
 
 perl -pe '$_ .= "\n" if /\S/' #ignore whitespace characters
 
-perl -pe 's/^/\n/' #2.5 Add a blank line before every line
+#2.5 Add a blank line before every line
+perl -pe 's/^/\n/' 
 
 perl -00 -pe '' # -00 is a paragraph mode
 perl -00pe0
 
 perl -pe 's/ /  /g' #double space words
 
-#chapter 3
-
+#3.1 Number all lines in a file
 perl -ne 'print "$. $_"'
 
-perl -pe '$_ = ++$x." $_" if /./' #3.2 Number only non-empty lines in a file
+#3.2 Number only non-empty lines in a file
+perl -pe '$_ = ++$x." $_" if /./' 
 
+#3.8 Number all lines in a file using a custom format
 perl -ne 'printf "%-5d %s", $., $_' # -5 left-justify with 5 spaces, 05 right-justify with zeros
 
-
-
+#3.9 Print the total number of lines in a file (emulate wc -l)
 perl -lne 'END { print $. }'
 perl -le 'print $n = (() = <>)' 
-
 
 #3.10 Print the number of non-empty lines in a file
 perl -le 'print scalar(grep { /./ } <>)'
@@ -254,3 +252,33 @@ perl -ne 'print if !/regex/'
 perl -ne 'print unless /regex/'
 perl -ne '/regex/ || print'
 
+#7.7 Print every line preceding a line that matches a regular expression
+perl -ne '/regex/ && $last && print $last; $last = $_'
+
+#7.8 Print every line following a line that matches a regular expression
+perl -ne 'if ($p) { print; $p = 0 } $p++ if /regex/'
+
+#7.9 Print lines that match regular expressions AAA and BBB in any order
+perl -ne '/AAA/ && /BBB/ && print'
+
+#7.11 Print lines that match regular expression AAA followed by BBB followed by CCC
+perl -ne '/AAA.*BBB.*CCC/ && print'
+
+#7.16 Print only lines 13, 19, and 67
+perl -ne '@lines = (13, 19, 88, 290, 999, 1400, 2000);
+  print if grep { $_ == $. } @lines'
+  
+#7.17 Print all lines from 17 to 30
+perl -ne 'print if 17..30'
+  
+#7.18 Print all lines between two regular expressions (including the lines that match)
+perl -ne 'print if /regex1/../regex2/'
+
+#7.19 Print the longest line
+perl -ne '$l = $_ if length($_) > length($l); END { print $l }'
+
+#7.26 Print all repeated lines only once
+perl -ne 'print if ++$a{$_} == 2'
+
+#7.27 Print all unique lines
+perl -ne 'print unless $a{$_}++'
