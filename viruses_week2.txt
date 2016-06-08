@@ -39,7 +39,8 @@ Viral effects:
 
 cytopathic effects (how do we know that virus replicate)
 
-s2 
+### S2 
+
 how many viruses in a sample
 infecivity
 
@@ -65,62 +66,88 @@ Why not successful
 --- Mutations
 --- Complexity of infections
 
-s3 :
+### S3:
 
-hemagglutination 
+**Hemagglutination**, 1941, GK Hirst 
 
-viruses bind but do not infected
-blood cells with viruses bind to other blood cells forming lettuce
-short-term viruses detach
-1941 GK Hirst 
+* Viruses bind but do not infected
+* Blood cells with viruses bind to other blood cells forming lettuce
+* Short-term process: viruses detach
 
-HA - 512
-
-measurement of viral enzyme activity
-reverse transcriptase (copies RNA into DNA)
-virus enzyme copies a subtrate into a radio-actively labelled product (radioactive triphosphate and magnesium)
+Measurement of viral enzyme activity
+Uses **reverse transcriptase** (copies RNA into DNA)
+* Virus enzyme copies a subtrate into a radio-actively labelled product (radioactive triphosphate and magnesium)
 which then can be detected by radiograph 
 
-immunostaining
-Direct
-
-Viral Antigen <- virus specific Ab w/ an fluorescent indicator 
-
-InDirect Virtal Antigen <- Ab (murine) <- moose Ab
+**Immunostaining**
+* Direct
+	* Viral Antigen <- virus specific Ab w/ a fluorescent indicator 
+* Indirect 
+	* Viral Antigen <- Ab (murine) <- moose Ab
  
 
-immunoblotting
-
-separated by electircal current
-blotting tank
-proteins transferred to nitrocellulose
-
-add antibody
-
-use autoradiograph 
+**Immunoblotting**
+* Proteins separated by electircal current
+* Placed in blotting tank to transfer the proteins to nitrocellulose
+* Antibodies are added 
+* Autoradiograph is used to detect antigens
 
 ELISA
 
-antibody 
-viral antigen binds to an antibody
-second antibody with an indicator to viral antigen
+* Solid w/ an Ab <- Viral antigen <- Ab w/ an indicator 
+* Solid w/ viral antigen and binded Ab <- 2nd Ab w/ an indicator 
+
+### S4 
+
+Fluorescent proteins (discovered in jelly fish)
+Add a fluorescent protein to virus' genome so it expresses its gene
+
+For example, the protein was added to herpes virus
+which is a **neurotropic** (capable of infecting nervous cells)
+
+Polymerase Chain Reaction (PCR), in 1983 by *Kary Mullis*
+
+Needs 
+* Sample to amplify
+* Primer to bind and start building DNAs
+* Thermostable Enzyme to amplify the initial sample 
+
+Occurs in 3 stages:
+
+* In **Denaturation** DNA strands are separated
+* In **Annealing** Primer binding)
+* In **Elongation** DNAs are built 
+
+Deep, High-Throughput Sequencing allows fast and accurate sequencing 
+
+### S5
+
+**One-step growth cycle**
+*Ellis & Delbruck*, 1939, studies on *E.coli*
+
+* **Adsorb** let particles infect as many cells as possible
+* **Dilute** or neutralize remaining unadsorbed particles
+* **Sample** to measure
+* **Assay**  				infectivity 
+
+When all cells infected
+* **Eclipse Period** -- no infectivity detected
+* **Burst/Yield** -- number of infectious particles increases drastically
+
+Few cells infected 
+* Goes through multiple eclipse periods (multiple cycles)
+
+**Adenovirus type 5**
+Intracellular activity measures eclipse period
+Extracellular activity measures latent period
+
+**Synchronous infection** -- infect all cells
+**MOI** (multiplicity of infection) - Number of infectious particles added per cell
+
+Poisson distribution: P(k)  = e^(-m)m^k/k!
+
+P(0)  = e^-m (fraction of cells infected with 0 particles)
+P(1)  = me^-m
+P(>1) = 1 - P(0) - P(1)
 
 
-B) if antibodies present
-
-viral antigen 
-antibody in a sample sticks to antigen
-
-
-S4 Revolutionary methods
-
-FLuorescent proteins (discovered in jelly fish)
-
-put a fluorescent protein into virus so it expresses its gene
-
-
-herpes virus (neurotropic) 
-
-Polymerase Chain Reaction
-
-Thermo Stable DNA 
