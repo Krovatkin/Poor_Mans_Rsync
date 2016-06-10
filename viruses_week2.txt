@@ -41,32 +41,31 @@ cytopathic effects (how do we know that virus replicate)
 
 ### S2 
 
-how many viruses in a sample
-infecivity
+Counting cytopathic effects (plaques)
 
-physical particulers 
+	* 1930 plaque assay	
+	* 1952 plaque assay for animal viruses
 
-1930 plaque assay
+* 0.1 ml is diluted (1/10, 1/100, 1/1000, etc) until the number of plaques is in 2 digits.
+* Measured in **PFU/ml** (e.g. 1.7 x 10^8)
 
-1952 plaque assay for animal viruses
 
-synctitium 
+* One-hit kinetics, the number of plaques is linearly proportional to virus concentration 
+* Two-hit kinetics, the number of plaques is squarely proportional to virus concentration  
 
-endpoint dilution assay
+Endpoint dilution assay
 
-dont kill cells or dont from plaques
+* Rows of 10 monolayer cell cultures
+* Each row is infected with different dilutions 
+* **TCID50** -- the dilution (endpoint) shows 50% of stock is infected
 
-TCID50 dilution at which 50% of stock is infected
+Viruses can be unsuccessful due 
 
-particle-to-pfu
+* Damaged Particles
+* Mutations
+* Complexity of infections (Infectious cycle)
 
-Why not successful
-
---- Damaged Particles
---- Mutations
---- Complexity of infections
-
-### S3:
+### S3
 
 **Hemagglutination**, 1941, GK Hirst 
 

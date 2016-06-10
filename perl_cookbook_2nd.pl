@@ -185,4 +185,125 @@ sub trim {
 }
 
 use Text::ParseWords;
-quotewords("," => 0, $_[0]); # => enquotes LHS, 2nd arg
+quotewords("," => 0, $_[0]); # => enquotes LHS, 2nd arg if fields in quotes
+
+#1.20. Parsing Comma-Separated Data
+use Text::CSV; #CPAN
+
+my $csv = Text::CSV->new( );              
+@fields = $csv->parse($line) && $csv->fields( );
+
+tie @data, "Tie::CSV_File", "data.csv";
+
+for ($i = 0; $i < @data; $i++) {
+    for ($j = 0; $j < @{$data[$i]}; $j++) { # @{$data[$i]} ????
+        print "Column $j is <$data[$i][$j]>\n";
+    } 
+}
+
+
+#1.21. Constant Variables
+use constant AVOGADRO => 6.02252e23; #creates a global sub
+
+*AVOGADRO = \6.02252e23; # "*" specifier for a symbol table 
+print "You need $AVOGADRO of those for guac\n"; #also used to create aliases (e.g. *this = *that)
+
+our $AVOGADRO; #if "use strict" pragma is in effect
+local *AVOGADRO = \6.02252e23; #our creates an alias to an existing name
+
+#implement a small tie class for consts 
+
+#1.22. Soundex Matching
+
+use Text::Soundex;
+use Text::Metaphone;
+
+#1.23. Program: fixstyle
+
+#changes all occurrences of each element in the first set 
+#to the corresponding element in the second set
+
+#1.24. Program: psgrep
+
+#psgrep script is given
+psgrep 'uid < 10' #queries on psgrep
+
+#2.1. Checking Whether a String Is a Valid Number
+use Regexp::Common;
+
+#RE is hash containing canned RegExs
+# /x ignores blanks in a pattern (readibility)
+$string =~ / ^   $RE{num}{int}  $ /x 
+
+$RE{num}{int}{-sep=>',?'}              # match 1234567 or 1,234,567
+$RE{num}{int}{-sep=>'.'}{-group=>4}    # match 1.2345.6789
+$RE{num}{int}{-base => 8}              # match 014 but not 99
+$RE{num}{int}{-sep=>','}{-group=3}     # match 1,234,594
+$RE{num}{int}{-sep=>',?'}{-group=3}    # match 1,234 or 1234
+$RE{num}{real}                         # match 123.456 or -0.123456
+$RE{num}{roman}                        # match xvii or MCMXCVIII
+$RE{num}{square}                       # match 9 or 256 or 12321
+
+#POSIX::strtod needs extra checks and handling
+sub getnum {
+    use POSIX qw(strtod);
+    my $str = shift;
+    $str =~ s/^\s+//;           # remove leading whitespace
+    $str =~ s/\s+$//;           # remove trailing whitespace
+    $! = 0;
+    my($num, $unparsed) = strtod($str);
+    if (($str eq '') || ($unparsed != 0) || $!) {
+        return;
+    } else {
+        return $num;
+    } 
+} 
+
+#2.2. Rounding Floating-Point Numbers
+$rounded = sprintf("%.2f", $unrounded);
+
+$a = 0.625;                # 0.625 is 0.625
+$b = 0.725;                # 0.725 is 0.724999999999999977795539507497
+printf "$_ is %.30g\n", $_ for $a, $b;
+
+#Perl rounds .5 toward even
+
+#2.3. Comparing Floating-Point Numbers
+sub equal {
+    my ($A, $B, $dp) = @_;
+    return sprintf("%.${dp}g", $A) eq sprintf("%.${dp}g", $B);
+  }
+
+  
+foreach ($X .. $Y) {...} 
+foreach $i ($X .. $Y) {...} #loop-scoped
+for ($i = $X; $i <= $Y; $i++) {...} #NOT loop-scoped
+for (my $i=$X; $i <= $Y; $i++) { ... }
+
+#2.5. Working with Roman Numerals
+use Roman;
+$roman = roman($arabic);                        
+$arabic = arabic($roman) if isroman($roman); 
+
+use Math::Roman qw(roman);
+print $a  = roman('I'); #  I
+print $a += 2000;       #  MMI   
+
+print "2003 is", "\N{ROMAN NUMERAL ONE THOUSAND}" x 2, "\N{ROMAN NUMERAL THREE}\n";
+
+#2.6. Generating Random Numbers
+$random = int( rand(51)) + 25;
+$elt = $array[ rand @array ];
+
+@chars = ( "A" .. "Z", "a" .. "z", 0 .. 9, qw(! @ $ % ^ & *) );
+$password = join("", @chars[ map { rand @chars } ( 1 .. 8 ) ]);
+
+#2.7. Generating Repeatable Random Number Sequences
+srand( 42 );  # pick any fixed starting point
+
+#2.8. Making Numbers Even More Random
+use Math::TrulyRandom;
+$random = truly_random_value( );
+
+use Math::Random;
+$random = random_uniform( );
