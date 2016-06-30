@@ -521,4 +521,161 @@ for ($i = 0; $i <= $#$ARRAYREF; $i++) {
 }
 
 $namelist{felines} = \@rogue_cats;
-foreach $cat ( @{ $namelist{felines} } ) {
+foreach $cat ( @{ $namelist{felines} } ) {...}
+
+for ($i=0; $i <= $#{ $namelist{felines} }; $i++) {
+    print "$namelist{felines}[$i] purrs hypnotically.\n";
+}
+
+#4.7. Extracting Unique Elements from a List
+%seen = ( );
+foreach $item (@list) {
+    push(@uniq, $item) unless $seen{$item}++;
+}
+
+%seen = ( );
+foreach $item (@list) {
+    $seen{$item}++;
+}
+@uniq = keys %seen;
+
+%seen = ( );
+@uniq = grep { ! $seen{$_} ++ } @list;
+
+#4.8. Finding Elements in One Array but Not Another
+my %seen;     # lookup table
+my @aonly;    # answer
+
+# build lookup table
+@seen{@B} = ( );
+
+foreach $item (@A) {
+    push(@aonly, $item) unless exists $seen{$item};
+}
+
+#Loopless version
+my %seen;
+@seen {@A} = ( ); //values #are undefs only works with exists
+delete @seen {@B};
+
+my @aonly = keys %seen;
+
+#
+@hash{"key1", "key2"} = (1,2);
+@seen{@B} = (1) x @B; 
+
+open(OLD, $path1)        || die "can't open $path1: $!";
+@seen{ <OLD> } = ( );
+open(NEW, $path2)        || die "can't open $path2: $!";
+while (<NEW>) {
+    print if exists $seen{$_};  
+}
+
+perl -e '@s{`cat OLD`}=( ); exists $s{$_} && print for `cat NEW`'
+perl -e '@s{`cat OLD`}=( ); exists $s{$_} || print for `cat NEW`'
+
+#4.9. Computing Union, Intersection, or Difference of UNIQUE Lists
+#You have a pair of lists, each holding UNDUPLICATED items
+
+#Initialization code for all solutions below
+@union = @isect = @diff = ( );
+%union = %isect = ( );
+%count = ( );
+
+#works cos the first time item seen 
+
+#since lists are UNIQUE we can only see the same element once or twice
+#once, its only added to %union; twice, its added to isect 
+#(@a, @b) is cross product
+foreach $e (@a, @b) { $union{$e}++ && $isect{$e}++ }
+
+@union = keys %union;
+@isect = keys %isect;
+
+@isect = @diff = @union = ( );
+foreach $e (@a, @b) { $count{$e}++ }
+
+@union = keys %count;
+foreach $e (keys %count) {
+    push @{ $count{$e} =  = 2 ? \@isect : \@diff }, $e;
+}
+
+#4.10. Appending One Array to Another
+@members = ("Time", "Flies");
+@initiates = ("An", "Arrow");
+push(@members, @initiates); 
+# @members is now ("Time", "Flies", "An", "Arrow")
+
+splice(@members, 2, 0, "Like", @initiates); 
+#Time Flies Like An Arrow
+
+#4.11. Reversing an Array
+foreach $element (reverse @ARRAY) {
+    # do something with $element
+}
+
+for ($i = $#ARRAY; $i >= 0; $i--) {
+    # do something with $ARRAY[$i]
+}
+
+#4.12. Processing Multiple Elements of an Array
+# remove $N elements from front of @ARRAY (shift $N)
+@FRONT = splice(@ARRAY, 0, $N);
+
+# remove $N elements from the end of the array (pop $N)
+@END = splice(@ARRAY, -$N);
+
+#4.13. Finding the First List Element That Passes a Test
+foreach $item (@array) {
+    if (CRITERION) {
+        $match = $item;  # must save
+        $found = 1;
+        last;
+    }
+}
+
+my ($i, $match_idx);
+for ($i = 0; $i < @array; $i++) {
+    if (CRITERION) {
+        $match_idx = $i;    # save the index
+        last;
+    }
+}
+
+use List::Util qw(first);
+$match = first { CRITERION } @list
+
+#4.14. Finding All Elements in an Array Matching Certain Criteria
+@MATCHING = grep { TEST ($_) } @LIST;
+
+#4.15. Sorting an Array Numerically
+@sorted = sort { $a <=> $b } @unsorted;
+
+package Sort_Subs;
+#$a and $b mapped to 
+#different $a and $b in different package
+sub revnum { $b <=> $a } 
+
+package Other_Pack;
+@all = sort Sort_Subs::revnum 4, 19, 8, 3; #use a routine
+
+#4.16. Sorting a List by Computable Field
+@precomputed = map { [compute( ),$_] } @unordered; #precompute if compute is expensive
+@ordered_precomputed = sort { $a->[0] <=> $b->[0] } @precomputed;
+@ordered = map { $_->[1] } @ordered_precomputed;
+
+#4.17. Implementing a Circular List
+unshift(@circular, pop(@circular));  # the last shall be first
+push(@circular, shift(@circular));   # and vice versa
+
+#4.18. Randomizing an Array
+use List::Util qw(shuffle);
+@array = shuffle(@array);
+
+$value = $array[ int(rand(@array)) ]; #a rand element
+
+#4.19. Program: words
+#ls generate columns of sorted output that you read down 
+#the columns instead of across the rows?
+ 
+#4.20. Program: permute
