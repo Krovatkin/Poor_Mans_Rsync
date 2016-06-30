@@ -307,3 +307,218 @@ $random = truly_random_value( );
 
 use Math::Random;
 $random = random_uniform( );
+
+#2.10. Doing Trigonometry in Degrees, Not Radians
+sub deg2rad {
+    my $degrees = shift;
+    return ($degrees / 180) * PI;
+}
+
+sub rad2deg {
+    my $radians = shift;
+    return ($radians / PI) * 180;
+}
+
+use Math::Trig;
+
+$radians = deg2rad($degrees);
+$degrees = rad2deg($radians);
+
+#2.11. Calculating More Trigonometric Functions
+
+#2.12. Taking Logarithms
+$log_e = log(VALUE);
+
+use POSIX qw(log10);
+$log_10 = log10(VALUE);
+
+#2.13. Multiplying Matrices
+
+#2.14. Using Complex Numbers
+use Math::Complex;
+$a = Math::Complex->new(3,5);               # or Math::Complex->new(3,5);
+$b = Math::Complex->new(2,-2);
+$c = $a * $b;
+
+$c = cplx(3,5) * cplx(2,-2);                # easier on the eye
+$d = 3 + 4*i;                               # 3 + 4i
+
+#2.15. Converting Binary, Octal, and Hexadecimal Numbers
+$number = oct($hexadecimal);         # "0x2e" becomes 47
+$number = oct($octal);               # "057"  becomes 47
+$number = oct($binary);              # "0b101110" becomes 47
+
+print "Gimme an integer in decimal, binary, octal, or hex: ";
+$num = <STDIN>;
+chomp $num;
+
+#2.16. Putting Commas in Numbers
+sub commify {
+    my $text = reverse $_[0];
+    $text =~ s/(\d\d\d)(?=\d)(?!\d*\.)/$1,/g;
+    return scalar reverse $text;
+}
+
+# \d(?=px) 1pt (2px) 3em (4px) : pos lookahead
+# \d(?!px) (1pt) 2px (3em) 4px : neg lookahead
+
+#2.17. Printing Correct Plurals
+printf "It took %d hour%s\n", $time, $time =  = 1 ? "" : "s";
+
+use Lingua::EN::Inflect qw(PL classical);
+classical(1);               # why isn't this the default?
+while (<DATA>) {            # each line in the data
+    for (split) {           # each word on the line
+        print "One $_, two ", PL($_), ".\n"; #One fish, two fish
+    }
+} 
+
+#2.18. Program: Calculating Prime Factors
+use strict;  #use is a compile time directive
+use integer; #use native integers
+
+our ($opt_b, $opt_d);
+use Getopt::Std;
+
+require Math::BigInt;    #runtime load
+Math::BigInt->import( ); #immaterial?
+
+
+#3.1. Finding Today’s Date
+($DAY, $MONTH, $YEAR) = (localtime)[3,4,5]; #or (localtime)[3..5]
+printf("The current date is %04d %02d %02d\n", $year+1900, $month+1, $day);
+
+use Time::localtime;
+$tm = localtime; #OO API
+($DAY, $MONTH, $YEAR) = ($tm->mday, $tm->mon, $tm->year);
+
+#3.2. Converting DMYHMS to Epoch Seconds
+use Time::Local;
+$time = timelocal($seconds, $minutes, $hours, (localtime)[3,4,5]);
+
+$time = timegm($seconds, $minutes, $hours, $day, $month-1, $year-1900);
+
+#3.3. Converting Epoch Seconds to DMYHMS
+($seconds, $minutes, $hours, $day_of_month, $month, $year,
+    $wday, $yday, $isdst) = localtime($time);
+printf("Dateline: %02d:%02d:%02d-%04d/%02d/%02d\n",
+    $hours, $minutes, $seconds, $year+1900, $month+1,
+    $day_of_month);
+
+#OO API
+use Time::localtime;        # or Time::gmtime
+$tm = localtime($TIME);     # or gmtime($TIME)
+
+#3.4. Adding to or Subtracting from a Date
+use Date::Calc qw(Add_Delta_DHMS); 
+#full $year, 1-based $month
+($year, $month, $day, $hh, $mm, $ss) = Add_Delta_DHMS(
+    1973, 1, 18, 3, 45, 50, # 18/Jan/1973, 3:45:50 am
+             55, 2, 17, 5); # 55 days, 2 hrs, 17 min, 5 sec
+
+#3.5. Difference of Two Dates
+use Date::Calc qw(Delta_DHMS);
+@bree = (1981, 6, 16, 4, 35, 25);   # 16 Jun 1981, 4:35:25
+@nat  = (1973, 1, 18, 3, 45, 50);   # 18 Jan 1973, 3:45:50
+@diff = Delta_DHMS(@nat, @bree); #$diff[0] days, $diff[1]:$diff[2]:$diff[3]
+
+
+#3.6. Day in a Week/Month/Year or Week Number
+($MONTHDAY, $WEEKDAY, $YEARDAY) = (localtime $DATE)[3,6,7];
+$WEEKNUM = int($YEARDAY / 7) + 1;
+
+
+use Date::Calc qw(Day_of_Week Week_Number Day_of_Year);
+$wday = Day_of_Week($year, $month, $day);
+
+#3.7. Parsing Dates and Times from Strings
+use Date::Manip qw(ParseDate UnixDate);
+$date = ParseDate($_);
+($year, $month, $day) = UnixDate($date, "%Y", "%m", "%d");
+
+#3.8. Printing a Date
+use POSIX qw(strftime);
+print "strftime gives: ", strftime("%A %D", localtime($time)), "\n";
+
+#3.9. High-Resolution Timers
+use Time::HiRes qw(gettimeofday);
+$t0 = gettimeofday( );    
+## do your operation here
+$t1 = gettimeofday( );
+($s, $ms) = gettimeofday( );
+#making sys_calls
+
+#3.10. Short Sleeps
+#might not be available on windows?
+select(undef, undef, undef, $time_to_sleep);
+
+use Time::HiRes qw(sleep); #$time_to_sleep is float
+sleep($time_to_sleep);
+
+#3.11. Program: hopdelta
+#hopdelta takes a mailer header and tries to analyze
+#the deltas between each mail stop 
+
+#Arrays -- Introduction
+@nested = ("this", "that", ("the", "other")); #("this", "that", "the", "other")
+
+#4.1. Specifying a List in Your Program
+@a = ("quick", "brown", "fox");
+
+@ships  = qw(Niña Pinta Santa María);               # WRONG
+@ships  = ('Niña', 'Pinta', 'Santa María');         # right
+
+@ships = ( << "END_OF_FLOTILLA" =~ /^\s*(.+)/gm);
+              Niña
+              Pinta 
+              Santa María
+END_OF_FLOTILLA
+
+#4.2. Printing a List with Commas
+sub commify_series {
+    (@_ =  = 0) ? ''                                      :
+    (@_ =  = 1) ? $_[0]                                   :
+    (@_ =  = 2) ? join(" and ", @_)                       :
+                join(", ", @_[0 .. ($#_-1)], "and $_[-1]");
+}
+
+#4.3. Changing Array Size
+@people = qw(Crosby Stills Nash Young);
+$#people--; #removes one element 
+$people[100] = 'boo'; #extended to 100 w/ undefs
+$#people = 10_000; #extended to 10_000 w/ undefs
+$people[10_000] = undef; #length stays the same
+
+$#foo = 5;
+@bar = ( (undef) x 5 ) ;
+
+defined $foo[3] #0
+exists $foo[3]  #0
+defined $bar[3] #0
+exists $bar[3]  #1
+
+
+#4.4. Implementing a Sparse Array
+$fake_array{ 1_000_000 } = 1; 
+
+foreach $element ( @fake_array{ sort {$a <=> $b} keys %fake_array } ) {}
+foreach $idx ( sort {$a <=> $b} keys %fake_array ) {}
+# $a <=> $b (a,b) => a < b
+
+
+#4.5. Iterating Over an Array
+foreach $item (@array) { 
+    $item--; #$item is an alias and loop-scoped
+}
+
+#4.6. Iterating Over an Array by Reference
+foreach $item (@$ARRAYREF) {
+    # do something with $item
+}
+
+for ($i = 0; $i <= $#$ARRAYREF; $i++) {
+    # do something with $ARRAYREF->[$i]
+}
+
+$namelist{felines} = \@rogue_cats;
+foreach $cat ( @{ $namelist{felines} } ) {

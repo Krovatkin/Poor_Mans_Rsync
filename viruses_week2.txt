@@ -1,44 +1,39 @@
-piconoviruses
+### S1
 
-polio viruses
+Viruses can be grouped by an infectious cycle
+Polio virus a member of Picornaviruses (similar infectious cycle)
+The whole cycle occurs in cythoplasm
 
-The infectious cycle
+The Infectious Cycle
 
-attachment/entry (have RNA)
-translation
-genome replication (more RNAs)
-Assembly (more virions)
+* Attachment/Entry (have RNA)
+* Translation
+* Genome Replication (more RNAs)
+* Assembly (more virions)
 
+* **Susceptible** -- Functional Receptor
+* **Permissive** --  Capacity to Replicate
+* **Resistant** -- No Receptor
 
-Susceptible (functional receptor)
-Permissive (capacity to replicate)
-Resistant has no receptor
+chicken egg -- animal model
+Allantoic inoculation used for making influenza vaccinces  
 
-chicken egg (animal model)
-
-Allantoic inoculation (used for vaccinces) influenza 
-
-
-Enders, Weller, Robbins
-propogate poliovirus in human cell culture of embryonic tissues 
+*Enders, Weller, Robbins* propagated poliovirus in human cell culture of embryonic tissues 
 
 cell lines:
-Human epithelial (cont)
-
-mouse fibroblast cell line (cont) 
-
-primary human foreskin fibroblasts (primary)
-
-diploid ()
+Human epithelial (continuous, grow indefinetely)
+mouse fibroblast cell line (continuous) 
+primary human foreskin fibroblasts (primary, die off after 20-30 divs)
+diploid cell strains (100 divisions, human embryonic lung cells)
 
 
 Hela Cells 
 
 
-Viral effects:
-
-cytopathic effects (how do we know that virus replicate)
-
+Viral Fffects:
+* **Cytopathic Effects** -- how do we know that virus replicate 
+	* syncytium -- a cell containing multiple nuclei. 
+	
 ### S2 
 
 Counting cytopathic effects (plaques)
