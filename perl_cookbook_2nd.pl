@@ -679,3 +679,409 @@ $value = $array[ int(rand(@array)) ]; #a rand element
 #the columns instead of across the rows?
  
 #4.20. Program: permute
+
+#Chapter 5. Introduction
+%food_color = (Apple  => "red") #=> quotes any word preceding it
+
+#5.1. Adding an Element to a Hash
+$food_color{Raspberry} = "pink"; 
+print $_ foreach (keys %food_color);
+
+#5.2. Testing for the Presence of a Key in a Hash
+$food_color{Glass} = "undef"; 
+print "Exists "  if exists  $food_color{Glass}; #Exists
+print "Defined " if defined $food_color{Glass}; #<>
+
+#5.3. Creating a Hash with Immutable Keys or Values
+use Hash::Util qw{ lock_keys  unlock_keys
+                   lock_value unlock_value
+                   lock_hash  unlock_hash  }; 
+				   
+lock_keys(%hash);                # restrict to current keys
+lock_keys(%hash, @klist);        # restrict to keys from @klist
+
+lock_value(%hash, $key); #forbid deletion of the key or modification of its value
+
+lock_hash(%hash); #make  all keys and their values read-only
+
+#Perl always creates hash elements on demand
+#Misspelled names will be created on demand 
+
+#5.4. Deleting from a Hash
+delete($HASH{$KEY}); #don't use =undef!!!
+delete @food_color{"Banana", "Apple", "Cabbage"};
+delete @food_color{@keys_to_remove};
+
+#5.5. Traversing a Hash
+while(($key, $value) = each(%HASH)) {...}
+
+foreach $key (keys %HASH) {
+    print $HASH{$key};
+}
+
+#5.6. Printing a Hash
+while ( ($k,$v) = each %hash ) {
+    print "$k => $v\n";
+}
+
+print map { "$_ => $hash{$_}\n" } keys %hash;
+
+print "@{[ %hash ]}\n"; #interpolation trick
+
+#5.7. Retrieving from a Hash in Insertion Order
+use Tie::IxHash;
+
+tie %food_color, "Tie::IxHash"; #ties a var to a pkg impl
+$food_color{"Banana"} = "Yellow";
+$food_color{"Apple"}  = "Green";
+
+#also provides OO interface to splice, push 
+#pop, shift, unshift, keys, values, and delete
+
+
+#5.8. Hashes with Multiple Values per Key
+push( @{$ttys{$user}}, $tty ); #or splice
+
+foreach $tty (sort @{$ttys{$user}}) { .. }
+
+#5.9. Inverting a Hash
+%REVERSE = reverse %LOOKUP; # %LOOKUP maps keys to values
+
+#only works for unique values
+
+%surname = ( "Mickey" => "Mantle", "Babe" => "Ruth" );
+
+#%surname as a list
+("Mickey", "Mantle", "Babe", "Ruth")
+
+#reversing the list 
+("Ruth", "Babe", "Mantle", "Mickey")
+
+#5.10. Sorting a Hash
+
+#This sorts the keys by their associated values:
+foreach $food (sort { $food_color{$a} cmp $food_color{$b} } (..)
+
+#This sorts by length of the values:
+@foods = sort { length($food_color{$a}) <=> length($food_color{$b}) } keys %food_color;
+
+#5.11. Merging Hashes
+
+#only the first value of duplicate keys is merged 
+%merged = (%A, %B);
+
+%merged = ( );
+while ( ($k,$v) = each(%A) ) {
+    $merged{$k} = $v;
+}
+while ( ($k,$v) = each(%B) ) {
+    $merged{$k} = $v;
+}
+	
+foreach $substanceref ( \%A, \%B ) {
+    while (($k, $v) = each %$substanceref) {
+        $substance_color{$k} = $v;
+    }
+}	
+
+#5.12. Finding Common or Different Keys in Two Hashes
+my @common = ( ); # @common will contain common keys
+foreach (keys %hash1) {
+        push(@common, $_) if exists $hash2{$_};
+}
+
+my @this_not_that = ( ); #diff of two key sets
+foreach (keys %hash1) {
+        push(@this_not_that, $_) unless exists $hash2{$_};
+}
+
+#or use keys %HASH and apply recipes from 4.9
+
+#5.13. Hashing References
+#( ref => ref )-like hashes don't work!
+
+use Tie::RefHash;
+tie %hash, "Tie::RefHash";
+# you may now use references as the keys to %hash
+
+tie %name, "Tie::RefHash";
+foreach $filename ("/etc/termcap", "/vmunix", "/bin/cat") {
+    $fh = IO::File->new("< $filename") or next;
+    $name{$fh} = $filename;
+}
+
+#5.14. Presizing a Hash
+
+# presize %hash to $num
+#needs to be a power of 2
+keys(%hash) = $num;
+
+#5.15. Finding the Most Common Anything
+%count = ( );
+foreach $element (@ARRAY) {
+    $count{$element}++;
+}
+
+#5.16. Representing Relationships Between Data
+
+#5.17. Program: dutree
+
+#7 Introduction
+
+#Pattern-Matching Modifiers
+
+#/x Ignore most whitespace in pattern and permit comments
+#/gc Don’t reset search position on failed match
+#/s Let . match newline
+#/m Let ^ and $ match next to embedded \n
+#/o Compile pattern once only
+#/e Righthand side of an s/// is code whose result is used as the replacement value
+#/ee Righthand side of an s/// is a string that’s eval‘d twice; the final result then used as the replacement value
+
+my $digits = "123456789"
+@yeslap = $digits =~ /(?=(\d\d\d))/g; # 123 234 345 456 567 678 789  
+s/(\d+)/sprintf("%#x", $1)/ge #converts all numbers into hex
+
+$string = "And little lambs eat ivy";
+$string =~ /l[^s]*s/;
+print "($`) ($&) ($´)\n"; #(And ) (little lambs) ( eat ivy)
+
+#$` substr($string, 0, $-[0]) #@- and @+, first introduced in Perl v5.6
+#$& substr($string, $-[0], $+[0] - $-[0])
+#$´ substr($string, $+[0])
+#$1 substr($string, $-[1], $+[1] - $-[1])
+
+#6.1. Copying and Substituting Simultaneously
+
+($dst = $src) =~ s/this/that/;
+
+for (@libdirs = @bindirs) { s/bin/lib/ }
+print "@libdirs\n";
+
+($a =  $b) =~ s/x/y/g;      # 1: copy $b and then change $a
+ $a = ($b  =~ s/x/y/g);     # 2: change $b, count goes in $a
+ $a =  $b  =~ s/x/y/g;      # 3: same as 2
+  
+#6.2. Matching Letters
+if ($var =~ /^[A-Za-z]+$/) {
+    # it is purely alphabetic
+}
+
+if ($var =~ /^\p{Alphabetic}+$/) {   # or just /^\pL+$/
+    print "var is purely alphabetic\n";
+}
+
+if ($var =~ /^[^\W\d_]+$/) {
+    print "var is purely alphabetic\n";
+}
+
+if ($var =~ /^[[:alpha:]]+$/) {
+    print "var is purely alphabetic\n";
+}
+
+#6.3. Matching Words
+/\S+/               # as many non-whitespace characters as possible
+/[A-Za-z'-]+/       # as many letters, apostrophes, and hyphens
+/\b([A-Za-z]+)\b/            # matches '
+/\s([A-Za-z]+)\s/            # fails at ends or w/ punctuation
+
+
+#6.4. Commenting Regular Expressions 
+
+/                 
+  (\w+)  #   the variable name
+/x;      #   /x ignores whitespaces outside [] and comments
+#
+$optional_sign      = '[-+]?';
+$mandatory_digits   = '\d+';
+
+$number = "(?:" #split a regex into logical groups
+        .   $optional_sign    
+        .   $mandatory_digits  
+		. ")";	
+
+#		
+$hex_digit = '(?i:[0-9a-z])'; #group-specific modifier  		
+#		
+$optional_sign      = qr/[-+]?/i;
+$mandatory_digits   = qr/\d+/;
+
+$number = qr{ 
+                 $optional_sign    
+                 $mandatory_digits       
+          }x; # needs a diff delimeter "{" 
+		
+
+#6.5. Finding the Nth Occurrence of a Match
+
+/(?:\w+\s+fish\s+){2}(\w+)\s+fish/i; #word preceding 3rd occurence of fish
+
+$count = 0; $count++ while $string =~ /PAT/g;		
+for ($count = 0; $string =~ /PAT/g; $count++) { }
+$count++ while $string =~ /(?=PAT)/g; #count overlapping matches
+
+@colors = ($pond =~ /(\w+)\s+fish\b/gi);      # get all matches
+@evens = grep { $count++ % 2 =  = 0 } /(\w+)\s+fish\b/gi; #even-numbered
+
+#6.6. Matching Within Multiple Lines
+
+#/m allows ^ and $ to match next to an embedded newline, 
+#whereas /s allows . to match newlines
+
+undef $/;             # each read is whole file
+  while (<>) {        # get one whole file at a time
+    s/<.*?>//gs;    # strip tags (terribly)
+  }
+  
+  
+#6.7. Reading Records with a Separator  
+ 
+undef $/; #reads in the whole file 
+@chunks = split(/pattern/, <FILEHANDLE>);
+ 
+#Perl’s official record separator, 
+#the $/ variable, must be a fixed string
+
+#6.8. Extracting a Range of Lines
+
+while (<>) {
+	#if (FIRST_LINE_NUM .. LAST_LINE_NUM)
+    if (/BEGIN PATTERN/ .. /END PATTERN/) {...} 
+}
+
+#.. tests the right operand on the same iteration
+#... operator waits until the next iteration 
+
+$in_body   = /^$/ .. eof( ); # .. allows any operands 
+
+#6.9. Matching Shell Globs as Regular Expressions
+my $raw_string = "\Q$string"; #non-ASCII chars are escaped
+
+#6.10. Speeding Up Interpolated Matches
+while ($line = <>) {
+    if ($line =~ /$pat/o) {...} # /o compiles $pat
+}   #$pattern compiled once, any changes to $pat are ignored
+
+@pats = map { qr/$_/ } @strings; #qr compiles @strings into patterns
+
+#6.11. Testing for a Valid Pattern
+eval { "" =~ /$pat/ };
+warn "INVALID PATTERN $@" if $@; #$@ is set on error
+
+$pat = "You lose @{[ system('rm -rf *')]} big here";
+
+#6.12. Honoring Locale Settings in Regular Expressions
+use locale;
+
+#6.13. Approximate Matching
+
+use String::Approx qw(amatch);
+
+#fuzzy match 10% of i/d/s of string's length
+if (amatch("PATTERN", @list)) {...} 
+
+#6.14. Matching from Where the Last Pattern Left Off
+while (/(\d+)/g) {...} # /g enables a progressive match
+
+$n =~ s/\G /0/g;
+#\G means the end of the previous match
+#\G equals to ^ at the beginning of a string
+
+
+while (/(\d+)/gc) {...} #/c doesnt reset pos after an unsuccessful match
+if (/\G(\S+)/g) {...}   #continue from the last match 
+
+#6.15. Greedy and Non-Greedy Matches
+
+#6.16. Detecting Doubled Words
+
+#a paragraph—a chunk of text terminated 
+#by two or more contiguous newlines.
+
+/([A-Z])\1/ #captures double letters. 
+
+
+$string = q("I can't see this," she remarked.);
+
+@a = $string =~ /\b\S+\b/g; #matches I, this
+@b = $string =~ /\S+/g;# matches "I, this,"
+
+
+#perl has to give up on the greedy match "nobody"
+#otherwise it won't match \2
+$a = 'nobody';
+$b = 'bodysnatcher';
+if ("$a $b" =~ /^(\w+)(\w+) \2(\w+)$/) {
+	print "$2 overlaps in $1-$2-$3\n"; 
+	#body overlaps in no-body-snatcher
+}
+
+#can even be used to solve 12x + 15y + 16z = 281
+
+#6.17. Matching Nested Patterns
+
+#??{ CODE } can recursively refer to a defining pattern
+
+# $(??{ CODE }) runs CODE and embeds back into a pattern
+if ($word =~ /^(\w+)\w?(??{reverse $1})$/ ) { #w? is a pivot
+
+
+use Regexp::Common;
+if ($text =~ /(\w+\s*$RE{balanced}{-parens=>'( )'})/o) {...}
+#$RE provides canned patterns 
+
+use Text::Balanced qw/extract_bracketed/;
+
+if (($before, $found, $after)  = extract_bracketed($text, "(")) 
+{...}
+
+#6.18. Expressing AND, OR, and NOT in a Single Pattern
+
+#6.19. Matching a Valid Mail Address
+
+#The Email::Valid CPAN module 
+#makes best effort to conform to RFC
+
+
+#6.20. Matching Abbreviations
+
+#Auto completation/live search
+chomp($answer = <>);
+if    ("SEND"  =~ /^\Q$answer/i) { print "Action is send\n"  }
+elsif ("STOP"  =~ /^\Q$answer/i) { print "Action is stop\n"  }
+else ...
+
+use Text::Abbrev; 
+$href = abbrev qw(send abort list edit);
+for (print "Action: "; <>; print "Action: ") {
+    chomp; 
+    my $action = $href->{ lc($_) };
+}
+
+#6.21. Program: urlify
+#This program puts HTML links around URLs in files.
+
+#6.22. Program: tcgrep
+#This program is a Perl rewrite of the Unix grep program.
+
+#7
+
+my $input;                            
+open(INPUT, "<", "/acme/widgets/data")  #INPUT is unadorned (e.g. no $)
+open($input, "<", "/acme/widgets/data") #since v5.6 indirect refs are allowed 
+
+while (<$input>) { print if /blue/; }
+close($input); 
+
+#The built-in filehandles STDIN, STDOUT, STDERR, 
+#ARGV Perl opens/reads files in succession from @ARGV
+
+open(LOGFILE, "> /tmp/log") #< > >>
+
+#system error message as a string 
+#and its numeric code in the $! variable
+
+$old_fh = select(LOGFILE); # switch stdout to LOGFILE
+
+
+
